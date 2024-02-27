@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- tailwind cdn -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <!-- project -->
+    <script src="./js/pyodide.js"></script>
+    <script>
+      const drawCheckboxArea = () => {
+        const CHECK_LIST = [
+          {
+            id: "id",
+            type: "Number",
+          },
+          {
+            id: "name",
+            type: "String",
+          },
+          {
+            id: "address",
+            type: "String",
+          },
+          {
+            id: "job",
+            type: "String",
+          },
+          {
+            id: "email",
+            type: "String",
+          },
+          {
+            id: "ssn",
+            type: "String",
+          },
+          {
+            id: "phone_number",
+            type: "String",
+          },
+          {
+            id: "company",
+            type: "String",
+          },
+          {
+            id: "url",
+            type: "String",
+          },
+          {
+            id: "ipv4",
+            type: "String",
+          },
+          {
+            id: "ipv6",
+            type: "String",
+          },
+          {
+            id: "user_agent",
+            type: "String",
+          },
+          {
+            id: "hex_color",
+            type: "String",
+          },
+          {
+            id: "rgb_color",
+            type: "String",
+          },
+          {
+            id: "safe_hex_color",
+            type: "String",
+          },
+          {
+            id: "safe_color_name",
+            type: "String",
+          },
+        ];
+        const check_box_area = document.querySelector(".check-box-area");
+        for (let i = 0; i < CHECK_LIST.length; i++) {
+          const check_box = document.createElement("div");
+          check_box.classList.add("flex", "items-center");
+          check_box.innerHTML = `
+            <button
+              type="button"
+              role="checkbox"
+              aria-checked="false"
+              data-state="unchecked"
+              value="on"
+              class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+              id="${CHECK_LIST[i].id}"
+            ></button>
+            <input
+              aria-hidden="true"
+              tabindex="-1"
+              type="checkbox"
+              value="on"
+              style="
+                transform: translateX(-100%);
+                position: absolute;
+                pointer-events: none;
+                opacity: 0;
+                margin: 0px;
+              "
+            />
+            <label for="${CHECK_LIST[i].id}" class="ml-2"> ${CHECK_LIST[i].id} </label>
+          `;
+          check_box_area.appendChild(check_box);
+        }
+      };
+      window.onload = drawCheckboxArea;
+    </script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="bg-[#121212] min-h-screen">
+      <nav class="flex items-center justify-between p-4 text-white">
+        <div class="flex items-center space-x-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-6 w-6 text-green-500"
+          >
+            <path
+              d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"
+            ></path>
+            <line x1="4" x2="4" y1="22" y2="15"></line>
+          </svg>
+          <div class="space-x-4">
+            <a class="text-white hover:text-green-500" href="#">
+              Mock데이터 만들기
+            </a>
+          </div>
+        </div>
+      </nav>
+      <header class="bg-green-900 p-4 text-white">
+        <h1 class="text-2xl font-bold">한국어로 데이터 만들기</h1>
+      </header>
+      <main class="p-4 text-white">
+        <p class="mb-4">
+          체크 박스에 원하는 데이터 유형을 선택하고, 원하는 데이터 수를 입력하면
+        </p>
+        <p class="mb-4">
+          랜덤한 데이터를 생성할 수 있습니다. 생성된 데이터는 JSON 형식으로
+          다운로드 받을 수 있습니다.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-800">
+              <tr>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                >
+                  Field Name
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                >
+                  Type
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                >
+                  Options
+                </th>
+                <th class="relative px-6 py-3">
+                  <span class="sr-only">Edit</span>
+                </th>
+                <th class="relative px-6 py-3">
+                  <span class="sr-only">Delete</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-gray-700 divide-y divide-gray-600">
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">id</td>
+                <td class="px-6 py-4 whitespace-nowrap">Row Number</td>
+                <td class="px-6 py-4 whitespace-nowrap">blank: 0 %</td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-5 w-5 text-gray-400"
+                  >
+                    <path
+                      d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5"
+                    ></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <path
+                      d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z"
+                    ></path>
+                  </svg>
+                </td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-5 w-5 text-gray-400"
+                  >
+                    <path
+                      d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z"
+                    ></path>
+                    <line x1="18" x2="12" y1="9" y2="15"></line>
+                    <line x1="12" x2="18" y1="9" y2="15"></line>
+                  </svg>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">first_name</td>
+                <td class="px-6 py-4 whitespace-nowrap">First Name</td>
+                <td class="px-6 py-4 whitespace-nowrap">blank: 0 %</td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-5 w-5 text-gray-400"
+                  >
+                    <path
+                      d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5"
+                    ></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <path
+                      d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z"
+                    ></path>
+                  </svg>
+                </td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="h-5 w-5 text-gray-400"
+                  >
+                    <path
+                      d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z"
+                    ></path>
+                    <line x1="18" x2="12" y1="9" y2="15"></line>
+                    <line x1="12" x2="18" y1="9" y2="15"></line>
+                  </svg>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 text-white bg-green-600 hover:bg-green-700"
+            onclick="createData()"
+          >
+            데이터 생성하기
+          </button>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <div class="flex items-center">
+            <label for="rows" class="mr-2"> # Rows: </label>
+            <input
+              class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-20"
+              id="rows"
+              placeholder="1000"
+              type="number"
+            />
+          </div>
+          <div class="flex items-center">
+            <label for="format" class="mr-2"> Format: </label>
+            <button
+              type="button"
+              role="combobox"
+              aria-controls="radix-:r3b:"
+              aria-expanded="false"
+              aria-autocomplete="none"
+              dir="ltr"
+              data-state="closed"
+              data-placeholder=""
+              class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              id="format"
+            >
+              <span style="pointer-events: none">JSON</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4 opacity-50"
+                aria-hidden="true"
+              >
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <!-- 체크 박스 영역 -->
+        <div class="check-box-area"></div>
+      </main>
+    </div>
+  </body>
+</html>
+
+<!-- -->

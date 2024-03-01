@@ -10,12 +10,28 @@
     <!-- project -->
     <script src="./js/pyodide.js"></script>
     <script>
+      const checkedSet = new Set();
+
+      const requestCreateData = () => {
+        createData(checkedSet).then((res) => {
+          console.log(
+            // res,
+            // Object.fromEntries(res),
+            JSON.stringify(Object.fromEntries(res), null, 4)
+          );
+
+          const resultArea = document.querySelector(".result-area");
+          resultArea.textContent = JSON.stringify(
+            Object.fromEntries(res),
+            null,
+            4
+          );
+          // const formattedJson = JSON.stringify(res, null, 4);
+        });
+      };
+
       const drawCheckboxArea = () => {
         const CHECK_LIST = [
-          {
-            id: "id",
-            type: "Number",
-          },
           {
             id: "name",
             type: "String",
@@ -77,35 +93,43 @@
             type: "String",
           },
         ];
+
+        const handleCheck = (e, { id }) => {
+          const isChecked = e.target.checked;
+          if (isChecked) {
+            checkedSet.add(id);
+          } else {
+            checkedSet.delete(id);
+          }
+          console.log("ytw e ", isChecked, id, checkedSet);
+          // checkedSet
+        };
         const check_box_area = document.querySelector(".check-box-area");
         for (let i = 0; i < CHECK_LIST.length; i++) {
+          const targetItem = CHECK_LIST[i];
           const check_box = document.createElement("div");
           check_box.classList.add("flex", "items-center");
-          check_box.innerHTML = `
-            <button
-              type="button"
-              role="checkbox"
-              aria-checked="false"
-              data-state="unchecked"
-              value="on"
-              class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-              id="${CHECK_LIST[i].id}"
-            ></button>
-            <input
-              aria-hidden="true"
-              tabindex="-1"
-              type="checkbox"
-              value="on"
-              style="
-                transform: translateX(-100%);
-                position: absolute;
-                pointer-events: none;
-                opacity: 0;
-                margin: 0px;
-              "
-            />
-            <label for="${CHECK_LIST[i].id}" class="ml-2"> ${CHECK_LIST[i].id} </label>
-          `;
+
+          // input 요소 생성 - checkbox
+          const input = document.createElement("input");
+          input.id = targetItem.id;
+          input.type = "checkbox";
+          input.value = "on";
+
+          // onchange 이벤트에 함수 연결
+          input.onchange = function (e) {
+            handleCheck(e, targetItem); // 여기서 handleCheck는 이벤트 처리 함수입니다.
+          };
+
+          const label = document.createElement("label");
+          label.htmlFor = targetItem.id; // 'for' 속성 설정
+          label.classList.add("ml-2");
+          label.textContent = targetItem.id; // 텍스트 설정
+
+          // 요소를 check_box에 추가
+          check_box.appendChild(input);
+          check_box.appendChild(label);
+
           check_box_area.appendChild(check_box);
         }
       };
@@ -166,10 +190,8 @@
                 >
                   Type
                 </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-                >
-                  Options
+                <th class="relative px-6 py-3">
+                  <span class="sr-only">Edit</span>
                 </th>
                 <th class="relative px-6 py-3">
                   <span class="sr-only">Edit</span>
@@ -183,114 +205,27 @@
               <tr>
                 <td class="px-6 py-4 whitespace-nowrap">id</td>
                 <td class="px-6 py-4 whitespace-nowrap">Row Number</td>
-                <td class="px-6 py-4 whitespace-nowrap">blank: 0 %</td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-5 w-5 text-gray-400"
-                  >
-                    <path
-                      d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5"
-                    ></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <path
-                      d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z"
-                    ></path>
-                  </svg>
-                </td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-5 w-5 text-gray-400"
-                  >
-                    <path
-                      d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z"
-                    ></path>
-                    <line x1="18" x2="12" y1="9" y2="15"></line>
-                    <line x1="12" x2="18" y1="9" y2="15"></line>
-                  </svg>
-                </td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4 whitespace-nowrap">first_name</td>
-                <td class="px-6 py-4 whitespace-nowrap">First Name</td>
-                <td class="px-6 py-4 whitespace-nowrap">blank: 0 %</td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-5 w-5 text-gray-400"
-                  >
-                    <path
-                      d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5"
-                    ></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <path
-                      d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z"
-                    ></path>
-                  </svg>
-                </td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="h-5 w-5 text-gray-400"
-                  >
-                    <path
-                      d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z"
-                    ></path>
-                    <line x1="18" x2="12" y1="9" y2="15"></line>
-                    <line x1="12" x2="18" y1="9" y2="15"></line>
-                  </svg>
-                </td>
+                <td class="px-6 py-4 whitespace-nowrap"></td>
+                <td class="px-6 py-4 whitespace-nowrap"></td>
+                <td class="px-6 py-4 whitespace-nowrap"></td>
               </tr>
             </tbody>
           </table>
         </div>
+        <!-- 테이블 영역 종료 -->
         <div class="flex items-center justify-between mt-4">
           <button
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 text-white bg-green-600 hover:bg-green-700"
-            onclick="createData()"
+            onclick="requestCreateData()"
           >
             데이터 생성하기
+          </button>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <button
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 text-white bg-green-600 hover:bg-green-700"
+          >
+            JSON 복사하기
           </button>
         </div>
         <div class="flex items-center justify-between mt-4">
@@ -338,6 +273,18 @@
         </div>
         <!-- 체크 박스 영역 -->
         <div class="check-box-area"></div>
+        <!-- 결과 영역 -->
+        <div
+          class="result-area"
+          style="
+            white-space: pre-wrap; /* 줄 바꿈과 공백을 유지하기 위해 */
+            background-color: #096b00;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+          "
+        ></div>
       </main>
     </div>
   </body>

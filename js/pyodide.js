@@ -1,11 +1,16 @@
-async function createData(checkedSet) {
-  const checkedList = Array.from(checkedSet);
-  let pyodide = await loadPyodide();
+let pyodide = null;
+async function initPyodide() {
+  pyodide = await loadPyodide();
   await pyodide.loadPackage(["micropip"]);
   await pyodide.runPythonAsync(`
       import micropip
       await micropip.install('faker')
     `);
+}
+
+async function createData(checkedSet, count) {
+  let result = [];
+  const checkedList = Array.from(checkedSet);
 
   let pythonExecuteCode = `
   from faker import Faker
@@ -13,6 +18,7 @@ async function createData(checkedSet) {
   profile = {}
   `;
 
+  // 선택한 프로퍼티 리스트를 돌면서 faker로 데이터를 생성
   for (let i = 0; i < checkedList.length; i++) {
     pythonExecuteCode += `
   profile["${checkedList[i]}"] = fake.${checkedList[i]}()
@@ -23,11 +29,13 @@ async function createData(checkedSet) {
   profile
   `;
 
-  console.log(pythonExecuteCode);
-  let pythonData = await pyodide.runPythonAsync(pythonExecuteCode);
+  for (let i = 0; i < count; i++) {
+    let pythonData = await pyodide.runPythonAsync(pythonExecuteCode);
 
-  const profile = pythonData.toJs();
-  return profile;
+    const profile = pythonData.toJs();
+    result.push(Object.fromEntries(profile));
+  }
+  return result;
 }
 // let pythonData = await pyodide.runPythonAsync(`
 // from faker import Faker

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- tailwind cdn -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- pyodide -->
+    <!-- pyodide cdn -->
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <!-- project -->
     <script src="./js/pyodide.js"></script>
@@ -37,6 +37,7 @@
           const resultArea = document.querySelector(".result-area");
           resultArea.textContent = JSON.stringify(
             {
+              total_count: res.length,
               result: res,
             },
             null,
@@ -45,11 +46,34 @@
         });
       };
 
+      /**
+       * 클립보드에 복사
+       */
+      const copyToClipboard = () => {
+        const resultArea = document.querySelector(".result-area");
+        const text = resultArea.textContent;
+        const el = document.createElement("textarea");
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        alert("복사되었습니다.");
+      };
+
       const drawCheckboxArea = () => {
         initPyodide();
         const CHECK_LIST = [
           {
+            id: "date",
+            type: "String",
+          },
+          {
             id: "name",
+            type: "String",
+          },
+          {
+            id: "user_name",
             type: "String",
           },
           {
@@ -74,6 +98,14 @@
           },
           {
             id: "company",
+            type: "String",
+          },
+          {
+            id: "catch_phrase",
+            type: "String",
+          },
+          {
+            id: "bs",
             type: "String",
           },
           {
@@ -108,17 +140,33 @@
             id: "safe_color_name",
             type: "String",
           },
+          {
+            id: "mac_address",
+            type: "String",
+          },
         ];
 
-        const handleCheck = (e, { id }) => {
+        /** 체크박스 이벤트 핸들러 */
+        const handleCheck = (e, { id, type }) => {
           const isChecked = e.target.checked;
           if (isChecked) {
             checkedSet.add(id);
+            const newItem = document.createElement("tr");
+            newItem.id = `tr-${id}`;
+            newItem.innerHTML = `
+              <td class="px-6 py-4 whitespace-nowrap">${id}</td>
+              <td class="px-6 py-4 whitespace-nowrap">${type}</td>
+              <td class="px-6 py-4 whitespace-nowrap"></td>
+              <td class="px-6 py-4 whitespace-nowrap"></td>
+              <td class="px-6 py-4 whitespace-nowrap"></td>
+            `;
+            document.getElementById("tbody").appendChild(newItem);
           } else {
             checkedSet.delete(id);
+
+            const targetItem = document.getElementById(`tr-${id}`);
+            targetItem.remove();
           }
-          console.log("ytw e ", isChecked, id, checkedSet);
-          // checkedSet
         };
         const check_box_area = document.querySelector(".check-box-area");
         for (let i = 0; i < CHECK_LIST.length; i++) {
@@ -192,12 +240,17 @@
           랜덤한 데이터를 생성할 수 있습니다. 생성된 데이터는 JSON 형식으로
           다운로드 받을 수 있습니다.
         </p>
+
+        <!-- 체크 박스 영역 -->
+        <div class="check-box-area"></div>
+        <!-- 테이블 영역 -->
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-700">
             <thead class="bg-gray-800">
               <tr>
                 <th
                   class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                  style="min-width: 200px"
                 >
                   Field Name
                 </th>
@@ -217,14 +270,14 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-gray-700 divide-y divide-gray-600">
-              <tr>
+            <tbody id="tbody" class="bg-gray-700 divide-y divide-gray-600">
+              <!-- <tr>
                 <td class="px-6 py-4 whitespace-nowrap">id</td>
                 <td class="px-6 py-4 whitespace-nowrap">Row Number</td>
                 <td class="px-6 py-4 whitespace-nowrap"></td>
                 <td class="px-6 py-4 whitespace-nowrap"></td>
                 <td class="px-6 py-4 whitespace-nowrap"></td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>
@@ -240,6 +293,7 @@
         <div class="flex items-center justify-between mt-4">
           <button
             class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 text-white bg-green-600 hover:bg-green-700"
+            onclick="copyToClipboard()"
           >
             JSON 복사하기
           </button>
@@ -249,6 +303,7 @@
             <label for="rows" class="mr-2"> # Rows: </label>
             <input
               type="text"
+              value="1000 "
               class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-20 text-black"
               id="rows"
               placeholder="1000"
@@ -288,8 +343,7 @@
             </button>
           </div>
         </div>
-        <!-- 체크 박스 영역 -->
-        <div class="check-box-area"></div>
+
         <!-- 결과 영역 -->
         <div
           class="result-area"

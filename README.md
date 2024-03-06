@@ -55,6 +55,7 @@ Python에서 사용되는, 데이터 모의 생성을 위한 라이브러리.
 ```
 
 # 프로젝트
+![Mar-04-2024 17-52-12.gif](https://prod-files-secure.s3.us-west-2.amazonaws.com/ccb2c6b7-abba-47a1-a894-aa7cfc5543f7/d2f2a980-d9f4-47a8-90d5-c8b32ad27fe1/Mar-04-2024_17-52-12.gif)
 
 ## 벤치 마킹
 

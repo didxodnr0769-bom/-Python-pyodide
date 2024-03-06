@@ -55,9 +55,12 @@ Python에서 사용되는, 데이터 모의 생성을 위한 라이브러리.
 ```
 
 # 프로젝트
-![Mar-04-2024 17-52-12.gif](https://prod-files-secure.s3.us-west-2.amazonaws.com/ccb2c6b7-abba-47a1-a894-aa7cfc5543f7/d2f2a980-d9f4-47a8-90d5-c8b32ad27fe1/Mar-04-2024_17-52-12.gif)
+![Mar-04-2024 17-52-12](https://github.com/didxodnr0769-bom/-Python-pyodide/assets/54312928/e5ad815c-a6f7-401a-b6c8-0f74c6e7b69a)
+
+
 
 ## 벤치 마킹
+![벤치마킹](https://github.com/didxodnr0769-bom/-Python-pyodide/assets/54312928/52a3930f-4bad-4f4a-ad30-f01a15b89543)
 
 [Mockaroo - Random Data Generator and API Mocking Tool | JSON / CSV / SQL / Excel](https://www.mockaroo.com/)
 

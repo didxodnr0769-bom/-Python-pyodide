@@ -33,6 +33,7 @@ WebAssembly는 저수준, 정적 타입 언어로 컴파일된 코드를 실행�
 Pyodide는 Python 인터프리터를 WebAssembly(Wasm)로 컴파일한 것
 
 <br />
+
 # faker 라이브러리
 
 Python에서 사용되는, 데이터 모의 생성을 위한 라이브러리.

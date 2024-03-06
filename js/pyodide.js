@@ -1,5 +1,5 @@
 let pyodide = null;
-async function initPyodide() {
+export async function initPyodide() {
   pyodide = await loadPyodide();
   await pyodide.loadPackage(["micropip"]);
   await pyodide.runPythonAsync(`
@@ -8,7 +8,7 @@ async function initPyodide() {
     `);
 }
 
-async function createData(checkedSet, count) {
+export async function createData(checkedSet, count) {
   const checkedList = Array.from(checkedSet);
 
   let pythonExecuteCode = `
